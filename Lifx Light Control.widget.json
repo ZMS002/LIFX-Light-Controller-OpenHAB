@@ -1,30 +1,124 @@
-{
-    "template": "<style>\n.icon-tile.colorize {\n  filter: invert(45%) sepia(100%) lifx-rotate(15deg) saturate(1700%);\n-webkit-filter: invert(45%) sepia(100%) lifx-rotate(15deg) saturate(1700%);\n  color: #440099;\n}\n.lifx-controller-table {\n  width: 100%;\n  border-collapse: separate; \n  border-spacing: 8px;\n  border: 2px solid #76899e; \n  border-radius: 10px;  \n} \n.lifx-rounded-border {\n  border: 2px solid #76899e; \n  border-radius: 10px;  \n}\n#dimmer-slider .rz-bubble {\n  color: #FFAA00;\n}\n#dimmer-slider .rz-pointer {\n  background-color: #FFAA00;\n}\n#dimmer-slider .rzslider .rz-bar.rz-selection {\n  background-color: #FFAA00;\n}\n.caret#lifx-controller-caret {\n  position: absolute;\n  left: 95%;\n  top: 45%;\n  color: white;  \n}\n.lifx-select {\n  padding-right: 10px;\n}\n.action-button#single-button {\n  color: #FFAA00;\n  background-color: rgb(95,95,95);\n  border: 1px solid #FFAA00;\n  overflow: hidden;\n  width: 100%;\n  border-radius: 5px;\n  font-size: 18px;\n  font-weight: normal;\n}\nul.dropdown-menu#lifx-controller-dropdown {\n  background-color: rgb(200,200,200);\n  text-align: center;\n  border: 0px;\n  border-radius: 5px;\n  width: 100%;\n} \nul.dropdown-menu#lifx-controller-dropdown li {\n  color: #000;\n  border-collapse: separate;\n  padding: 5px;\n  border-radius: inherit;  \n} \n  \n</style>\n\n<!-- Defined scenes -->\n<div ng-init=\"sceneMap={\n              '100,0,100': 'Normal',\n              '5,91,78': 'Savanna Sunset',\n              '37,47,48': 'Tropical Twilight', \n              '189,75,53': 'Arctic Aurora', \n              '320,57,84': 'Spring Blossom', \n              '50,30,50': 'Relax',  \n              '42,100,30': 'Dimmed', \n              '42,100,1': 'Nightlight'\n             }\" />\n\n<table class=\"lifx-controller-table\">\n  <tr>\n    <td ng-if=\"config.showTitle == true\" colspan=\"2\">\n      <h3 style=\"color: #ffaa00; line-height: .5em;\">{{config.title}}</h3>\n    </td>\n  </tr>\n  <tr>\n    <td width=\"20%\" class=\"lifx-rounded-border\">\n      <table style=\"width: 100%;\">\n        <tr>\n          <td style=\"padding: 0px; padding-top: 10px; padding-bottom: 10px;\">\n            <div ng-init='onoff={\"name\": \"OnOff\", \"item\": config.light, \"hidelabel\": true, \"hideonoff\": true, \"iconset\": \"smarthome-set\",\"icon\": \"bulb\",\"icon_size\": \"36\" }'>\n              <widget-switch   ng-model=\"onoff\" />\n            </div>\n          </td>\n        </tr>\n      </table>\n    </td>\n    <td width=\"80%\" class=\"lifx-rounded-border\">\n      <div class=\"slider-div\" ng-init='dimmerModel={\"name\": \"dimmer\", \"item\": config.dimmer, \n                          \"floor\" : 0, \"ceil\": 100, \"step\": 1,\n                          \"hidelabel\" : \"true\", \"hidelimits\": \"true\" }'>\n        <widget-slider ng-model=\"dimmerModel\" id=\"dimmer-slider\"/>\n      </div>\n    </td>\n  </tr>\n  <tr>\n    <td colspan=\"2\">\n      <table width=\"100%\">\n        <tr>\n          <td><div style=\"font-size: 15px; color: #FFAA00; font-weight: bold;\"><u>Scene</u></div></td>\n        </tr>\n        <tr>\n          <td>\n            <div style=\"width: 100%;\" class=\"btn-group\" uib-dropdown>\n              <button id=\"single-button\" type=\"button\" class=\"action-button\" uib-dropdown-toggle>\n                <span id=\"lifx-select\">{{sceneMap[itemValue(config.light)]}}</span><span class=\"caret\" id=\"lifx-controller-caret\"></span>\n                <span id=\"lifx-select\" ng-if=\"sceneMap[itemValue(config.light)]== NULL\">UNKNOWN ({{itemValue(config.light)}})</span>\n              </button>\n              <ul class=\"dropdown-menu\" id=\"lifx-controller-dropdown\" uib-dropdown-menu role=\"menu\" aria-labelledby=\"single-button\">\n                <li role=\"menuitem\" ng-repeat=\"(state, label) in sceneMap\">\n                  <a ng-click=\"sendCmd(config.light, state)\">{{label}}</a>\n                </li>                \n              </ul>\n            </div>\n          </td>\n        </tr>\n      </table>          \n    </td>\n  </tr>\n</table>\n\n",
-    "settings": [
-        {
-            "type": "string",
-            "id": "title",
-            "label": "Title",
-            "default": "Light"
-        },
-        {
-            "type": "checkbox",
-            "id": "showTitle",
-            "label": "Show Title",
-            "default": true
-        },
-        {
-            "type": "item",
-            "id": "light",
-            "label": "Light"
-        },
-        {
-            "type": "item",
-            "id": "dimmer",
-            "label": "Dimmer"
-        }
-    ],
-    "name": "LIFX Light Controller",
-    "author": "Ezekiel Millard-Stead",
-    "description": "A copy of the Hue Light Controller Widget by Tim Rogers with minor tweeks for LIFX Lights."
+<style>
+.icon-tile.colorize {
+  filter: invert(45%) sepia(100%) lifx-rotate(15deg) saturate(1700%);
+-webkit-filter: invert(45%) sepia(100%) lifx-rotate(15deg) saturate(1700%);
+  color: #440099;
 }
+.lifx-controller-table {
+  width: 100%;
+  border-collapse: separate; 
+  border-spacing: 8px;
+  border: 2px solid #76899e; 
+  border-radius: 10px;  
+} 
+.lifx-rounded-border {
+  border: 2px solid #76899e; 
+  border-radius: 10px;  
+}
+#dimmer-slider .rz-bubble {
+  color: #FFAA00;
+}
+#dimmer-slider .rz-pointer {
+  background-color: #FFAA00;
+}
+#dimmer-slider .rzslider .rz-bar.rz-selection {
+  background-color: #FFAA00;
+}
+.caret#lifx-controller-caret {
+  position: absolute;
+  left: 95%;
+  top: 45%;
+  color: white;  
+}
+.lifx-select {
+  padding-right: 10px;
+}
+.action-button#single-button {
+  color: #FFAA00;
+  background-color: rgb(95,95,95);
+  border: 1px solid #FFAA00;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: normal;
+}
+ul.dropdown-menu#lifx-controller-dropdown {
+  background-color: rgb(200,200,200);
+  text-align: center;
+  border: 0px;
+  border-radius: 5px;
+  width: 100%;
+} 
+ul.dropdown-menu#lifx-controller-dropdown li {
+  color: #000;
+  border-collapse: separate;
+  padding: 5px;
+  border-radius: inherit;  
+} 
+  
+</style>
+
+<!-- Defined scenes -->
+<div ng-init="sceneMap={
+              '100,0,100': 'Normal',
+              '5,91,78': 'Savanna Sunset',
+              '37,47,48': 'Tropical Twilight', 
+              '189,75,53': 'Arctic Aurora', 
+              '320,57,84': 'Spring Blossom', 
+              '50,30,50': 'Relax',  
+              '42,100,30': 'Dimmed', 
+              '42,100,1': 'Nightlight'
+             }" />
+
+<table class="lifx-controller-table">
+  <tr>
+    <td ng-if="config.showTitle == true" colspan="2">
+      <h3 style="color: #ffaa00; line-height: .5em;">{{config.title}}</h3>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" class="lifx-rounded-border">
+      <table style="width: 100%;">
+        <tr>
+          <td style="padding: 0px; padding-top: 10px; padding-bottom: 10px;">
+            <div ng-init='onoff={"name": "OnOff", "item": config.light, "hidelabel": true, "hideonoff": true, "iconset": "smarthome-set","icon": "bulb","icon_size": "36" }'>
+              <widget-switch   ng-model="onoff" />
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td width="80%" class="lifx-rounded-border">
+      <div class="slider-div" ng-init='dimmerModel={"name": "dimmer", "item": config.dimmer, 
+                          "floor" : 0, "ceil": 100, "step": 1,
+                          "hidelabel" : "true", "hidelimits": "true" }'>
+        <widget-slider ng-model="dimmerModel" id="dimmer-slider"/>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table width="100%">
+        <tr>
+          <td><div style="font-size: 15px; color: #FFAA00; font-weight: bold;"><u>Scene</u></div></td>
+        </tr>
+        <tr>
+          <td>
+            <div style="width: 100%;" class="btn-group" uib-dropdown>
+              <button id="single-button" type="button" class="action-button" uib-dropdown-toggle>
+                <span id="lifx-select">{{sceneMap[itemValue(config.light)]}}</span><span class="caret" id="lifx-controller-caret"></span>
+                <span id="lifx-select" ng-if="sceneMap[itemValue(config.light)]== NULL">UNKNOWN ({{itemValue(config.light)}})</span>
+              </button>
+              <ul class="dropdown-menu" id="lifx-controller-dropdown" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <li role="menuitem" ng-repeat="(state, label) in sceneMap">
+                  <a ng-click="sendCmd(config.light, state)">{{label}}</a>
+                </li>                
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </table>          
+    </td>
+  </tr>
+</table>  
